@@ -4,33 +4,28 @@
 #   (bind reachable over Tailscale at 100.70.240.55:4000)
 
 model_list:
-  # ---- Local, free: served by IPEX-LLM Ollama on the Arc B60 (port 11500) ----
-  - model_name: local-chat            # default everyday brain
+  # ---- Local, free: served by llama-swap on the Arc B60 (port 9090) ----
+  # llama-swap loads/swaps the model named below on demand.
+  - model_name: local-chat            # default everyday brain (64K, fast)
+    litellm_params:
+      model: openai/gemma3-12b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: local-vision          # Hermes' eyes (Gemma 3 multimodal) — added with mmproj
+    litellm_params:
+      model: openai/gemma3-12b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: gemma-12b            # 64K balanced
+    litellm_params:
+      model: openai/gemma3-12b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: gemma-12b-max        # full 128K context
     litellm_params:
       model: openai/gemma3-12b-max
-      api_base: http://127.0.0.1:11500/v1
-      api_key: "ollama"
-  - model_name: local-vision          # Hermes' eyes (Gemma 3 is multimodal)
-    litellm_params:
-      model: openai/gemma3-12b-max
-      api_base: http://127.0.0.1:11500/v1
-      api_key: "ollama"
-  - model_name: gemma-12b-max
-    litellm_params:
-      model: openai/gemma3-12b-max
-      api_base: http://127.0.0.1:11500/v1
-      api_key: "ollama"
-  - model_name: gemma-27b-max
-    litellm_params:
-      model: openai/gemma3-27b-max
-      api_base: http://127.0.0.1:11500/v1
-      api_key: "ollama"
-  # ---- High-throughput local tier: vLLM XPU on the B60 (port 8001), added in Phase 3 ----
-  - model_name: gpt-oss-20b
-    litellm_params:
-      model: openai/gpt-oss-20b
-      api_base: http://127.0.0.1:8001/v1
-      api_key: "vllm"
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
 
   # ---- Paid, opt-in: only used when the caller explicitly asks for these aliases ----
   - model_name: coding
