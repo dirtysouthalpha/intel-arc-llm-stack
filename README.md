@@ -7,6 +7,16 @@ everyday + vision inference on the GPU and reserves paid APIs for coding/orchest
 Built for **HOMESERVER** (Windows Server 2025) and deployed to `V:\AI`, but intended
 to help anyone with an Arc B-series card. See [PLAN.md](PLAN.md) and [MODELS.md](MODELS.md).
 
+## Install (one command)
+On a Windows box with an Intel Arc GPU + Python 3.10+:
+```powershell
+iex "& { $(irm https://raw.githubusercontent.com/REPLACE_ME/arc-b60-llm/main/install.ps1) } -Root C:\arc-llm"
+```
+This downloads the engines (IPEX-LLM SYCL + mainline Vulkan llama.cpp + llama-swap), a default
+Gemma 3 model, sets up the LiteLLM gateway, registers autostart tasks, and opens the firewall.
+When it finishes it prints your endpoint + API key. (Run from an interactive session - Arc GPU
+compute is not available to background services.)
+
 ## Layout
 - `vram-budget/` — `vram_budget.py`, the max-`num_ctx` calculator (KV-cache + sliding-window aware).
 - `recipes/` — Ollama Modelfiles (and later vLLM configs) tuned for max context per model.
