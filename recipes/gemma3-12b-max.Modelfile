@@ -1,0 +1,7 @@
+# gemma3-12b-max — Gemma 3 12B tuned for maximum context on the Arc B60 (24GB).
+# Build:  ollama create gemma3-12b-max -f gemma3-12b-max.Modelfile
+# Pairs with server env OLLAMA_FLASH_ATTENTION=1 + OLLAMA_KV_CACHE_TYPE=q8_0.
+# At Q4 weights (~7.3GB) + q8 KV, full 128K context fits in ~13.7GB (calc: vram_budget.py).
+FROM gemma3:12b
+PARAMETER num_ctx 131072
+PARAMETER num_gpu 999

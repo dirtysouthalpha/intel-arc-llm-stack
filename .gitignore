@@ -1,0 +1,12 @@
+# Large / machine-local artifacts — never commit these
+models/
+downloads/
+ipex-ollama/
+logs/
+*.gguf
+*.zip
+*.log
+__pycache__/
+*.pyc
+.env
+gateway/.env

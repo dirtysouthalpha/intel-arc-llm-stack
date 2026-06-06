@@ -1,0 +1,7 @@
+# gemma3-27b-max — Gemma 3 27B tuned for long context on the Arc B60 (24GB).
+# Build:  ollama create gemma3-27b-max -f gemma3-27b-max.Modelfile
+# At Q4 weights (~16GB) + q8 KV: 64K fits ~20.9GB (safe); full 128K is ~23.5GB (tight).
+# Default to 65536 for headroom; bump to 131072 once verified stable on your box.
+FROM gemma3:27b
+PARAMETER num_ctx 65536
+PARAMETER num_gpu 999
