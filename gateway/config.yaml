@@ -25,6 +25,16 @@ model_list:
       model: openai/gemma3-12b-max
       api_base: http://127.0.0.1:9090/v1
       api_key: "swap"
+  - model_name: gemma-27b
+    litellm_params:
+      model: openai/gemma3-27b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: gemma-27b-vision
+    litellm_params:
+      model: openai/gemma3-27b-vision
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
 
   # ---- Paid, opt-in: used only when the caller explicitly asks for these aliases ----
   - model_name: coding
