@@ -20,7 +20,17 @@
 - Trade-off: mainline SYCL lacks IPEX's Battlemage-tuned kernels, so expect somewhat lower
   throughput than the IPEX build gets on Gemma/Qwen2.5 - acceptable for unlocking new models.
 
-## Action items
+## RESULT: mainline Vulkan works - gpt-oss-20b is live
+- Downloaded `llama-b9544-bin-win-vulkan-x64.zip` -> `V:\AI\llama-cpp-vulkan`.
+- `llama-server --list-devices` enumerates **only** `Vulkan0: Intel Arc Pro B60 (24380 MiB)`
+  (the RTX 2070 doesn't appear) -> device selection is automatic and safe.
+- **gpt-oss-20b (MXFP4, ~12GB) loads and generates on the B60 via Vulkan** (`-ngl 999 -c 16384 --jinja`).
+  Gotcha: drop `-fa` (Vulkan flash-attn + gpt-oss MoE crashed llama-swap's spawn).
+- So newer archs use the Vulkan binary; Gemma/Qwen2.5 stay on the IPEX SYCL binary (Battlemage-tuned).
+- vLLM/WSL is NOT needed for these models. (vLLM would still help for high-concurrency serving later.)
+
+## Action items (remaining)
+- Qwen3-VL: download GGUF + mmproj, add a llama-swap entry using the Vulkan binary.
 - Download latest `llama-*-bin-win-sycl-x64.zip` from llama.cpp releases -> `V:\AI\llama-cpp-main`.
 - Smoke-test on the B60 (ONEAPI_DEVICE_SELECTOR=level_zero:0, session 1).
 - If good: pull gpt-oss-20b GGUF + Qwen3-VL GGUF, add llama-swap entries using the mainline binary.
