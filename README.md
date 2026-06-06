@@ -32,6 +32,12 @@ to help anyone with an Arc B-series card. See [PLAN.md](PLAN.md) and [MODELS.md]
 5. The IPEX-LLM Ollama (kept for convenience/small models) runs on **port 11500**, separate
    from stock Ollama (`11434`, RTX 2070). `llama-server` for the heavy models runs on **8080**.
 
+## Deploying config changes
+Copy files to `V:\AI\...` with **SCP** (`Set-SCPItem`), not inline base64-over-SSH — the latter
+truncates files larger than ~2KB at the Windows command-line limit (silently dropped our extra
+model entries once). After a config change, restart cleanly with `launchers/restart-stack.ps1`
+(stopping a scheduled task leaves its spawned child process running).
+
 ## Quick start (on HOMESERVER)
 ```powershell
 # Engine is auto-started by the 'B60-IPEX-Ollama' scheduled task (interactive session).
