@@ -12,6 +12,16 @@ All numbers in the **interactive session (session 1)**; engine pinned to `level_
 
 llama-bench (same model): prompt processing `pp512 = 84 tok/s` (SYCL).
 
+## Long-context findings on this IPEX SYCL build (b20250729)
+- **Flash attention is broken**: `-fa` (with or without KV quant) falls back to a CPU op and
+  crashes at warmup — `GGML_ASSERT(nbv0 == ggml_type_size(v->type))` in `ggml-cpu/ops.cpp`.
+  The SYCL backend has no FA kernel in this build. Keep FA **off**.
+- **Quantized KV (`-ctk/-ctv q8_0`) also crashes** the same way. Use **f16 KV**.
+- Without FA, the attention **compute buffer explodes with context**: ~36 GB at 128K / ub=512 →
+  alloc fails. It scales with `ubatch × ctx`, so **lower `-ub`** to fit (e.g., `-ub 64` ≈ 4.5 GB).
+- Gemma 3 KV stays modest via sliding-window: f16 KV @128K ≈ 9.8 GB (8.2 global + 1.6 SWA).
+- Net recipe for max context on this build: **f16 KV, no FA, small `-ub`.**
+
 ## Decisions
 - **Heavy models → `llama-server`** (IPEX-LLM llama.cpp portable), one model per process,
   orchestrated by **llama-swap** for multi-model behind one OpenAI port.
