@@ -22,6 +22,17 @@ llama-bench (same model): prompt processing `pp512 = 84 tok/s` (SYCL).
 - Gemma 3 KV stays modest via sliding-window: f16 KV @128K ≈ 9.8 GB (8.2 global + 1.6 SWA).
 - Net recipe for max context on this build: **f16 KV, no FA, small `-ub`.**
 
+## Verified models (llama-server on B60, via llama-swap/gateway)
+| Model | Role | Verified |
+|---|---|---|
+| Gemma 3 12B | chat 64K / max 128K / vision | gen 33 tok/s; needle@16K PASS (17,640 tok) |
+| Gemma 3 27B | larger chat 32K / vision | accurate gen |
+| Qwen3-30B-A3B | **MoE** reasoning + tools | accurate gen |
+| Qwen2.5-Coder-32B | local coding | correct code gen |
+| Qwen2.5-VL-7B | fast vision | accurate image description (32s load) |
+
+Long-context needle-in-haystack @ ~16K: **PASS** (retrieved hidden passcode).
+
 ## Decisions
 - **Heavy models → `llama-server`** (IPEX-LLM llama.cpp portable), one model per process,
   orchestrated by **llama-swap** for multi-model behind one OpenAI port.
