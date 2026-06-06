@@ -10,3 +10,4 @@ __pycache__/
 *.pyc
 .env
 gateway/.env
+wsl-gpu-setup.sh
