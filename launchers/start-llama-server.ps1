@@ -7,11 +7,12 @@ param(
   [int]$Port = 8088,            # 8080 collides with qBittorrent's WebUI
   [int]$Ngl = 999,
   [string]$KvType = "q8_0",
-  # Flash attention + quantized KV crashes this IPEX SYCL build
-  # (GGML_ASSERT nbv0 == ggml_type_size in ggml-cpu/ops.cpp). Default OFF -> f16 KV.
-  # Gemma 3's sliding-window attention keeps KV small even at 128K, so f16 is fine.
-  [switch]$FlashAttn,
-  [switch]$NoFlashAttn         # kept for back-compat; f16 KV is the default
+  # Flash attention with FP16 KV is REQUIRED for long context: without -fa the attention
+  # compute buffer explodes (36GB+ at 128K) and load fails. With -fa it streams.
+  # Do NOT add -ctk/-ctv KV quant: quantized V crashes this SYCL build
+  # (GGML_ASSERT nbv0 == ggml_type_size in ggml-cpu/ops.cpp). f16 KV + -fa is the sweet spot.
+  [switch]$QuantKv,            # opt-in; known-broken on this build, here for future testing
+  [switch]$NoFlashAttn         # disable flash attention (only for tiny contexts)
 )
 $LL = "V:\AI\llama-cpp"
 $env:ONEAPI_DEVICE_SELECTOR = "level_zero:0"   # pin Arc B60, never the RTX 2070
@@ -20,7 +21,8 @@ $env:SYCL_CACHE_PERSISTENT  = "1"
 
 $args = @("-m", $Model, "-ngl", $Ngl, "--host", "0.0.0.0", "--port", $Port,
           "-c", $Ctx, "-np", "1", "--no-mmap")
-if ($FlashAttn) { $args += @("-fa", "-ctk", $KvType, "-ctv", $KvType) }  # opt-in only
+if (-not $NoFlashAttn) { $args += @("-fa") }                       # f16 KV + flash attention (default)
+if ($QuantKv)          { $args += @("-ctk", $KvType, "-ctv", $KvType) }  # broken on this build
 
 Set-Location $LL
 Write-Host "llama-server: $Model  ctx=$Ctx  ngl=$Ngl  port=$Port  (Arc B60)"
