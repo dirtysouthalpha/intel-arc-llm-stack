@@ -14,12 +14,23 @@ to help anyone with an Arc B-series card. See [PLAN.md](PLAN.md) and [MODELS.md]
 - `gateway/` — LiteLLM config: one OpenAI endpoint with local-first cost routing.
 - `bench/` — throughput + long-context verification.
 
-## Key gotchas learned (Arc on Windows)
-1. **Run the engine in an interactive session (session 1), not as a session-0 service** —
-   Intel GPU *compute* isn't reachable from session 0, so it silently falls back to CPU.
-   (The scheduled task uses `LogonType Interactive`.)
+## Key gotchas learned (Arc on Windows) — the hard-won part
+1. **Run the engine in an interactive session (session 1), not a session-0 service.**
+   Intel GPU *compute* isn't reachable from session 0, so it silently falls back to CPU
+   (3.4 tok/s, `100% CPU`). The scheduled tasks use `LogonType Interactive`.
 2. **Pin the device** to `level_zero:0` so inference never lands on the secondary RTX 2070.
-3. The IPEX-LLM Ollama runs on **port 11500**, separate from stock Ollama (`11434`, RTX 2070).
+   (The Intel runtime only enumerates the Arc, so this also guarantees isolation.)
+3. **Don't use IPEX-LLM *ollama* for big models.** Its scheduler misdetects Arc VRAM
+   (reports ~4–13 GiB), logs `layers.offload=0`, and puts weights on the GPU but the
+   **KV cache + compute graph on CPU** → constant PCIe thrash → **0.8 tok/s on Gemma 12B**.
+   Forcing `num_gpu` doesn't override it. Use **IPEX-LLM `llama-server`** instead, where
+   `-ngl 999` reliably offloads everything (weights + KV).
+4. **ollama's GGUFs don't load in IPEX-LLM llama.cpp.** ollama writes Gemma 3 with its own
+   metadata; mainline llama.cpp errors with
+   `key not found in model: gemma3.attention.layer_norm_rms_epsilon`.
+   Use **mainline GGUFs from HuggingFace** (ggml-org / unsloth / bartowski) instead.
+5. The IPEX-LLM Ollama (kept for convenience/small models) runs on **port 11500**, separate
+   from stock Ollama (`11434`, RTX 2070). `llama-server` for the heavy models runs on **8080**.
 
 ## Quick start (on HOMESERVER)
 ```powershell
