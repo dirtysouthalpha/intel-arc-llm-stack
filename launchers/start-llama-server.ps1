@@ -7,12 +7,14 @@ param(
   [int]$Port = 8088,            # 8080 collides with qBittorrent's WebUI
   [int]$Ngl = 999,
   [string]$KvType = "q8_0",
-  # Flash attention with FP16 KV is REQUIRED for long context: without -fa the attention
-  # compute buffer explodes (36GB+ at 128K) and load fails. With -fa it streams.
-  # Do NOT add -ctk/-ctv KV quant: quantized V crashes this SYCL build
-  # (GGML_ASSERT nbv0 == ggml_type_size in ggml-cpu/ops.cpp). f16 KV + -fa is the sweet spot.
-  [switch]$QuantKv,            # opt-in; known-broken on this build, here for future testing
-  [switch]$NoFlashAttn         # disable flash attention (only for tiny contexts)
+  [int]$UBatch = 0,            # micro-batch; SMALL value shrinks the attention compute buffer
+  [int]$Batch = 0,            # logical batch
+  # This IPEX SYCL build has NO flash-attention kernel: -fa falls back to a CPU op that
+  # crashes (GGML_ASSERT nbv0 == ggml_type_size in ggml-cpu/ops.cpp). So FA stays OFF and we
+  # tame the (otherwise 36GB @128K) compute buffer by lowering -ub instead. f16 KV (no quant;
+  # quantized V also crashes the same way).
+  [switch]$FlashAttn,         # opt-in; known-broken on this build, kept for future builds
+  [switch]$QuantKv            # opt-in; known-broken on this build
 )
 $LL = "V:\AI\llama-cpp"
 $env:ONEAPI_DEVICE_SELECTOR = "level_zero:0"   # pin Arc B60, never the RTX 2070
@@ -21,8 +23,10 @@ $env:SYCL_CACHE_PERSISTENT  = "1"
 
 $args = @("-m", $Model, "-ngl", $Ngl, "--host", "0.0.0.0", "--port", $Port,
           "-c", $Ctx, "-np", "1", "--no-mmap")
-if (-not $NoFlashAttn) { $args += @("-fa") }                       # f16 KV + flash attention (default)
-if ($QuantKv)          { $args += @("-ctk", $KvType, "-ctv", $KvType) }  # broken on this build
+if ($UBatch -gt 0) { $args += @("-ub", $UBatch) }
+if ($Batch  -gt 0) { $args += @("-b",  $Batch) }
+if ($FlashAttn)    { $args += @("-fa") }                              # broken on this build
+if ($QuantKv)      { $args += @("-ctk", $KvType, "-ctv", $KvType) }   # broken on this build
 
 Set-Location $LL
 Write-Host "llama-server: $Model  ctx=$Ctx  ngl=$Ngl  port=$Port  (Arc B60)"
