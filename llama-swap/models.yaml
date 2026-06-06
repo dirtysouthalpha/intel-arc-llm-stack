@@ -1,0 +1,32 @@
+# llama-swap config — multi-model serving on the Arc B60 behind one OpenAI endpoint.
+# llama-swap loads/unloads a model on demand (only one big model fits in 24GB at a time).
+# Env (ONEAPI_DEVICE_SELECTOR etc.) is inherited from the start-swap.ps1 launcher.
+# NOTE for this IPEX SYCL build: no flash-attn, no KV quant (both crash). f16 KV + small -ub.
+
+healthCheckTimeout: 300
+
+models:
+  # Balanced daily driver: 64K context, larger ubatch for fast prompt ingestion.
+  "gemma3-12b":
+    cmd: >
+      V:\AI\llama-cpp\llama-server.exe
+      -m V:\AI\models\gemma-3-12b-it-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 65536 -ub 256 -b 1024 -np 1 --no-mmap
+    ttl: 1800
+
+  # Max context: full 128K. Small ubatch to fit the compute buffer; slower long-prompt ingest.
+  "gemma3-12b-max":
+    cmd: >
+      V:\AI\llama-cpp\llama-server.exe
+      -m V:\AI\models\gemma-3-12b-it-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 131072 -ub 64 -b 256 -np 1 --no-mmap
+    ttl: 1800
+
+  # Placeholders — fill in once GGUFs are pulled (see MODELS.md).
+  # "gemma3-27b":
+  #   cmd: >
+  #     V:\AI\llama-cpp\llama-server.exe -m V:\AI\models\gemma-3-27b-it-Q4_K_M.gguf
+  #     -ngl 999 --host 127.0.0.1 --port ${PORT} -c 32768 -ub 128 -np 1 --no-mmap
+  #   ttl: 1800
