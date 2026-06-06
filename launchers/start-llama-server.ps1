@@ -20,4 +20,5 @@ if (-not $NoFlashAttn) { $args += @("-fa", "-ctk", $KvType, "-ctv", $KvType) }
 
 Set-Location $LL
 Write-Host "llama-server: $Model  ctx=$Ctx  ngl=$Ngl  port=$Port  (Arc B60)"
-& "$LL\llama-server.exe" @args
+$log = "V:\AI\logs\llama-server-$Port.log"
+& "$LL\llama-server.exe" @args *> $log
