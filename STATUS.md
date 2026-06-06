@@ -8,17 +8,21 @@ The Arc B60 local-LLM stack is **operational on HOMESERVER** and reboot-persiste
 - llama-swap (internal): `http://127.0.0.1:9090/v1` — model swapping on the B60.
 - Hermes agent: `http://100.70.240.55:8478` (A2A: `/a2a/message`).
 
-## Models (via the gateway)
+## Models (via the gateway) - all local = $0 on the B60
 | Alias | Backend | Notes |
 |---|---|---|
-| `local-chat` | gemma3-12b (64K) | default everyday brain, $0 |
-| `local-vision` | gemma3-12b-vision (32K) | text + image (Hermes uses this) |
-| `gemma-12b` | gemma3-12b (64K) | fast |
-| `gemma-12b-max` | gemma3-12b (128K) | full context, slower long-prompt ingest |
+| `local-chat` | gemma3-12b (64K) | default everyday brain |
+| `local-vision` | gemma3-12b-vision | text + image (Hermes uses this) |
+| `gemma-12b` / `gemma-12b-max` | Gemma 3 12B | 64K / full 128K |
+| `gemma-27b` / `gemma-27b-vision` | Gemma 3 27B | 32K / 16K vision |
+| `qwen3-30b` | Qwen3-30B-A3B **MoE** | fast (3B active), strong tools |
+| `local-coding` | Qwen2.5-Coder-32B | local coding (16K) |
+| `qwen2.5-vl` | Qwen2.5-VL-7B | fast vision + tools |
 | `coding` | claude-sonnet-4-6 | **paid**, needs ANTHROPIC_API_KEY |
 | `orchestration` | claude-opus-4-8 | **paid**, needs ANTHROPIC_API_KEY |
 
 Default fallback is `local-chat`, so unspecified traffic stays local + free.
+Only one big model is resident at a time; llama-swap loads/unloads on demand (~30-260s cold load).
 
 ## Throughput (Gemma 3 12B Q4 on the B60)
 - Generation ~33 tok/s; full GPU offload (49/49 layers, SYCL0).
