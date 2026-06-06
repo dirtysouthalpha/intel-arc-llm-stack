@@ -51,3 +51,31 @@ models:
       -ngl 999 --host 127.0.0.1 --port ${PORT}
       -c 16384 -ub 64 -b 256 -np 1 --no-mmap
     ttl: 1800
+
+  # Qwen3-30B-A3B MoE (3B active) - fast, strong tools. Q4 ~18GB.
+  "qwen3-30b":
+    cmd: >
+      V:\AI\llama-cpp\llama-server.exe
+      -m V:\AI\models\Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 32768 -ub 256 -b 1024 -np 1 --no-mmap
+    ttl: 1800
+
+  # Qwen2.5-Coder-32B - local coding. Q4 ~20GB -> tight, smaller context.
+  "qwen2.5-coder-32b":
+    cmd: >
+      V:\AI\llama-cpp\llama-server.exe
+      -m V:\AI\models\Qwen2.5-Coder-32B-Instruct-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 16384 -ub 64 -b 256 -np 1 --no-mmap
+    ttl: 1800
+
+  # Qwen2.5-VL-7B - vision + tools, small/fast.
+  "qwen2.5-vl-7b":
+    cmd: >
+      V:\AI\llama-cpp\llama-server.exe
+      -m V:\AI\models\Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf
+      --mmproj V:\AI\models\Qwen2.5-VL-7B-mmproj-F16.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 32768 -ub 256 -b 1024 -np 1 --no-mmap
+    ttl: 1800
