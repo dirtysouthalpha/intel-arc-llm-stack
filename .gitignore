@@ -11,3 +11,5 @@ __pycache__/
 .env
 gateway/.env
 wsl-gpu-setup.sh
+sentinel_prime_wire.py
+sentinel_prime_verify.py
