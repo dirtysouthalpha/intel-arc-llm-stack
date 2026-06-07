@@ -90,3 +90,23 @@ models:
       -ngl 999 --host 127.0.0.1 --port ${PORT}
       -c 16384 --jinja -np 1 --no-mmap
     ttl: 1800
+
+  # Qwen3-VL-8B - newer vision-language (mainline Vulkan binary).
+  "qwen3-vl-8b":
+    cmd: >
+      V:\AI\llama-cpp-vulkan\llama-server.exe
+      -m V:\AI\models\Qwen3-VL-8B-Instruct-Q4_K_M.gguf
+      --mmproj V:\AI\models\Qwen3-VL-8B-mmproj-F16.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 32768 -np 1 --no-mmap
+    ttl: 1800
+
+  # Qwen2.5-Omni-7B - text + image + AUDIO + video (mainline Vulkan binary + audio-capable mmproj).
+  "qwen2.5-omni":
+    cmd: >
+      V:\AI\llama-cpp-vulkan\llama-server.exe
+      -m V:\AI\models\Qwen2.5-Omni-7B-Q4_K_M.gguf
+      --mmproj V:\AI\models\Qwen2.5-Omni-7B-mmproj-f16.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 32768 -np 1 --no-mmap
+    ttl: 1800
