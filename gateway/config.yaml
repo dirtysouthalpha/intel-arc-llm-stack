@@ -56,6 +56,16 @@ model_list:
       model: openai/gpt-oss-20b
       api_base: http://127.0.0.1:9090/v1
       api_key: "swap"
+  - model_name: qwen3-vl
+    litellm_params:
+      model: openai/qwen3-vl-8b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: omni
+    litellm_params:
+      model: openai/qwen2.5-omni
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
 
   # ---- Paid, opt-in: used only when the caller explicitly asks for these aliases ----
   - model_name: coding
