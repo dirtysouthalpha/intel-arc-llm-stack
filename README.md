@@ -10,7 +10,7 @@ to help anyone with an Arc B-series card. See [PLAN.md](PLAN.md) and [MODELS.md]
 ## Install (one command)
 On a Windows box with an Intel Arc GPU + Python 3.10+:
 ```powershell
-iex "& { $(irm https://raw.githubusercontent.com/REPLACE_ME/arc-b60-llm/main/install.ps1) } -Root C:\arc-llm"
+iex "& { $(irm https://raw.githubusercontent.com/dirtysouthalpha/intel-arc-llm-stack/main/install.ps1) } -Root C:\arc-llm"
 ```
 This downloads the engines (IPEX-LLM SYCL + mainline Vulkan llama.cpp + llama-swap), a default
 Gemma 3 model, sets up the LiteLLM gateway, registers autostart tasks, and opens the firewall.
