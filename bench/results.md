@@ -33,6 +33,15 @@ llama-bench (same model): prompt processing `pp512 = 84 tok/s` (SYCL).
 
 Long-context needle-in-haystack @ ~16K: **PASS** (retrieved hidden passcode).
 
+## Newer models on the mainline Vulkan engine
+| Model | Modality | Verified |
+|---|---|---|
+| gpt-oss-20b | text **MoE** | accurate gen (15s warm) |
+| Qwen3-VL-8B | vision | "Red circle." (needs `-fit off`) |
+| Qwen2.5-Omni-7B | text+image+**audio**+video | vision OK; **audio transcription exact** (TTS WAV -> text) |
+
+The B60 now covers text, MoE reasoning, vision (5 models), local coding, 128K context, and audio.
+
 ## Decisions
 - **Heavy models → `llama-server`** (IPEX-LLM llama.cpp portable), one model per process,
   orchestrated by **llama-swap** for multi-model behind one OpenAI port.
