@@ -14,7 +14,7 @@
 
 .EXAMPLE
   # one-liner:
-  #   iex "& { $(irm https://raw.githubusercontent.com/USER/arc-b60-llm/main/install.ps1) } -Root C:\arc-llm"
+  #   iex "& { $(irm https://raw.githubusercontent.com/dirtysouthalpha/intel-arc-llm-stack/main/install.ps1) } -Root C:\arc-llm"
   .\install.ps1 -Root C:\arc-llm
 #>
 [CmdletBinding()]
