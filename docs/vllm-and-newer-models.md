@@ -29,8 +29,12 @@
 - So newer archs use the Vulkan binary; Gemma/Qwen2.5 stay on the IPEX SYCL binary (Battlemage-tuned).
 - vLLM/WSL is NOT needed for these models. (vLLM would still help for high-concurrency serving later.)
 
-## Action items (remaining)
-- Qwen3-VL: download GGUF + mmproj, add a llama-swap entry using the Vulkan binary.
+## Qwen3-VL + Qwen2.5-Omni (Vulkan) - DONE
+- **Qwen3-VL-8B**: works on Vulkan, but ONLY with **`-fit off`** (the new auto memory-fit step
+  crashes with `EXITCODE -1` during "fitting params to device memory" on this build). With it off:
+  loads + answers image queries ("Red circle.", 12s).
+- **Qwen2.5-Omni-7B**: text + image + **audio** + video. Loads on Vulkan; vision verified.
+  Audio via OpenAI `input_audio` content type (base64 wav) through llama-server's mtmd.
 - Download latest `llama-*-bin-win-sycl-x64.zip` from llama.cpp releases -> `V:\AI\llama-cpp-main`.
 - Smoke-test on the B60 (ONEAPI_DEVICE_SELECTOR=level_zero:0, session 1).
 - If good: pull gpt-oss-20b GGUF + Qwen3-VL GGUF, add llama-swap entries using the mainline binary.
