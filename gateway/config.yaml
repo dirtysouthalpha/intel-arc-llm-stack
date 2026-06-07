@@ -7,7 +7,7 @@ model_list:
   # ---- Local, free: served by llama-swap on the Arc B60 (port 9090) ----
   - model_name: local-chat
     litellm_params:
-      model: openai/gemma3-12b
+      model: openai/gemma3-12b-vision   # same resident multimodal model (handles text too) - stays warm
       api_base: http://127.0.0.1:9090/v1
       api_key: "swap"
   - model_name: local-vision

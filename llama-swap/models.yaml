@@ -26,7 +26,8 @@ models:
       -c 131072 -ub 64 -b 256 -np 1 --no-mmap
     ttl: 1800
 
-  # Vision: Gemma 3 multimodal (text + image) via the mmproj projector. For Hermes' screenshots.
+  # PRIMARY resident model: Gemma 3 multimodal (text + image). Serves local-chat, local-vision,
+  # and Hermes. Long TTL = stays warm so there's no cold-load timeout for everyday use.
   "gemma3-12b-vision":
     cmd: >
       V:\AI\llama-cpp\llama-server.exe
@@ -34,7 +35,7 @@ models:
       --mmproj V:\AI\models\gemma-3-12b-mmproj-f16.gguf
       -ngl 999 --host 127.0.0.1 --port ${PORT}
       -c 32768 -ub 256 -b 1024 -np 1 --no-mmap
-    ttl: 1800
+    ttl: 28800
 
   # Gemma 3 27B (Q4, ~15.8GB weights). f16 KV + small ub to fit 24GB. 32K context.
   "gemma3-27b":
