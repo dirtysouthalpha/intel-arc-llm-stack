@@ -13,6 +13,5 @@ gateway/.env
 wsl-gpu-setup.sh
 sentinel_prime_wire.py
 sentinel_prime_verify.py
-setup-services.ps1
 wire-workstation-router.py
 wire-workstation-agent.py
