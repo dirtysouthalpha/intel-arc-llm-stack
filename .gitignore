@@ -14,3 +14,5 @@ wsl-gpu-setup.sh
 sentinel_prime_wire.py
 sentinel_prime_verify.py
 setup-services.ps1
+wire-nuke-router.py
+wire-nuke-agent.py

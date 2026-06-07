@@ -2,7 +2,7 @@
 # Loads the primary model ONLY when the GPU is idle (no llama-server running). If you're actively
 # using another model, that model owns the GPU and we leave it alone; once it unloads (idle), the
 # next run re-warms the primary. Run on boot + every ~15 min.
-$primary = "gemma3-12b-vision"
+$primary = "gemma3-12b-vision"   # resident model for the dashboard (local-chat/local-vision)
 $swap = "http://127.0.0.1:9090/v1/chat/completions"
 
 # Is any model currently loaded? (llama-server child of either engine)
