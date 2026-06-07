@@ -18,6 +18,9 @@ The Arc B60 local-LLM stack is **operational on HOMESERVER** and reboot-persiste
 | `qwen3-30b` | Qwen3-30B-A3B **MoE** | fast (3B active), strong tools |
 | `local-coding` | Qwen2.5-Coder-32B | local coding (16K) |
 | `qwen2.5-vl` | Qwen2.5-VL-7B | fast vision + tools |
+| `gpt-oss-20b` | gpt-oss-20b **MoE** | OpenAI open model (Vulkan engine) |
+| `qwen3-vl` | Qwen3-VL-8B | newer vision (Vulkan engine) |
+| `omni` | Qwen2.5-Omni-7B | text+image+**audio**+video (Vulkan engine) |
 | `coding` | claude-sonnet-4-6 | **paid**, needs ANTHROPIC_API_KEY |
 | `orchestration` | claude-opus-4-8 | **paid**, needs ANTHROPIC_API_KEY |
 
