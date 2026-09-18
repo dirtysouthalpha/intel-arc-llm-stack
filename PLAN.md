@@ -2,7 +2,7 @@
 
 ## Context
 
-HOMESERVER (`100.70.240.55`, Windows Server 2025, Ryzen 7 2700X, 32GB RAM) has an **Intel Arc Pro B60 (24GB VRAM, Battlemage/Xe2)** that is currently **completely idle for LLM work**. The existing stock Ollama 0.24.0 only supports CUDA/ROCm/Metal, so it runs on the secondary **NVIDIA RTX 2070 (8GB)** — too small for the models we want.
+The server (Windows Server 2025, Ryzen 7 2700X, 32GB RAM) has an **Intel Arc Pro B60 (24GB VRAM, Battlemage/Xe2)** that is currently **completely idle for LLM work**. The existing stock Ollama 0.24.0 only supports CUDA/ROCm/Metal, so it runs on the secondary **NVIDIA RTX 2070 (8GB)** — too small for the models we want.
 
 Goal: build the tooling to run **any LLM on the B60**, with three explicit priorities from the user:
 1. **Maximize usable context length** ("max tokens possible") per model.
@@ -76,8 +76,8 @@ vLLM gives paged KV cache + FP8 KV-cache quant = the best context-saturation eng
   - `local-chat`, `local-vision`, `gemma-12b-max`, `gemma-27b-max` → **B60** (default for everyday + Hermes + vision; $0).
   - `coding`, `orchestration` → **paid APIs** (Claude/etc.) — only hit when explicitly requested.
   - Set the local Gemma model as the **default** so anything unspecified stays free.
-- Bind to the **Tailscale IP `100.70.240.55`** (already on Tailscale) so `nuke`/laptop reach it; document `tailscale serve` option for HTTPS.
-- Result: one `https://100.70.240.55:<port>/v1` endpoint; everyday traffic is local, paid spend is opt-in.
+- Bind to your server's IP (`SERVER_IP`) (already on Tailscale) so your other machines can reach it; document `tailscale serve` option for HTTPS.
+- Result: one `https://SERVER_IP:<port>/v1` endpoint; everyday traffic is local, paid spend is opt-in.
 
 ## Phase 5 — Wire into Hermes (primary) + Sentinel (secondary)
 
@@ -101,7 +101,7 @@ vLLM gives paged KV cache + FP8 KV-cache quant = the best context-saturation eng
 ## Verification
 1. `xpu-smi` shows **B60** compute + VRAM load (and 2070 idle) during inference.
 2. Each Gemma recipe loads at its target `num_ctx` and **passes a long-context needle test** at that length.
-3. `curl https://100.70.240.55/.../v1/chat/completions` from **nuke over Tailscale** returns a completion using `gemma-27b-max`.
+3. `curl https://SERVER_IP/.../v1/chat/completions` from another machine over Tailscale returns a completion using `gemma-27b-max`.
 4. **Hermes** runs its desktop-automation loop entirely on local Gemma 3 (text **and** vision) — verified via a screenshot→action task with `xpu-smi` showing B60 load and **no paid-API calls**.
 5. **Sentinel dashboard** produces a response routed through the B60 end-to-end.
 6. **Cost-routing**: `local-*` aliases hit the B60 ($0); `coding`/`orchestration` aliases reach paid APIs only when explicitly called.

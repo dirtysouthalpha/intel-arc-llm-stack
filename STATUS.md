@@ -1,12 +1,12 @@
 # Live system status
 
-The Arc B60 local-LLM stack is **operational on HOMESERVER** and reboot-persistent.
+The Arc B60 local-LLM stack is **operational on the server** and reboot-persistent.
 
 ## Endpoints
-- **Gateway (use this):** `http://100.70.240.55:4000/v1` — OpenAI-compatible, reachable over Tailscale.
+- **Gateway (use this):** `http://SERVER_IP:4000/v1` — OpenAI-compatible, reachable over Tailscale.
   Auth: `Authorization: Bearer <LITELLM_MASTER_KEY>` (stored in `V:\AI\gateway\.env`).
 - llama-swap (internal): `http://127.0.0.1:9090/v1` — model swapping on the B60.
-- Hermes agent: `http://100.70.240.55:8478` (A2A: `/a2a/message`).
+- the agent: `http://SERVER_IP:8478` (A2A: `/a2a/message`).
 
 ## Models (via the gateway) - all local = $0 on the B60
 | Alias | Backend | Notes |
@@ -47,7 +47,7 @@ then `Restart-ScheduledTask B60-Gateway`. Everyday/vision stays local; only `cod
 
 ## Quick test (from any Tailscale machine)
 ```bash
-curl http://100.70.240.55:4000/v1/chat/completions \
+curl http://SERVER_IP:4000/v1/chat/completions \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY" -H "Content-Type: application/json" \
   -d '{"model":"local-chat","messages":[{"role":"user","content":"hi"}]}'
 ```

@@ -64,7 +64,7 @@
     overlay.className = 'conv panel';
     overlay.style.cssText = 'position:fixed;display:none;flex-direction:column;z-index:50;min-height:0';
     overlay.innerHTML =
-      '<div class="conv-head" style="display:flex;align-items:center;justify-content:space-between"><div class="panel-title">Sentinel Prime</div><div class="bot-chip"><span class="blip"></span>Hermes agent</div></div>'
+      '<div class="conv-head" style="display:flex;align-items:center;justify-content:space-between"><div class="panel-title">Sentinel Prime</div><div class="bot-chip"><span class="blip"></span>the agent</div></div>'
     + '<div class="conv-scroll" id="sp-msgs"></div>'
     + '<div class="conv-foot"><div class="quick-row" id="sp-quick"></div><div class="composer"><input class="field" id="sp-input" placeholder="Ask Hermes…  (paste or drop images)"></div>'
     + '<div class="model-row"><span>MODEL</span><select id="sp-sel"></select><div class="toggle" id="sp-tog"><i></i></div><span>Auto</span></div></div>';
@@ -243,7 +243,7 @@
     if (!tv) return;
     var sec = TV_SECTIONS[tvIdx % TV_SECTIONS.length];
     var head = tv.querySelector('#sp-tv-head');
-    if (head) head.innerHTML = esc(sec.t)+' · LIVE NEURALIS <span class="mc-live"><span class="rec"></span>LIVE</span>'
+    if (head) head.innerHTML = esc(sec.t)+' · LIVE <span class="mc-live"><span class="rec"></span>LIVE</span>'
       + '<span style="margin-left:auto;display:flex;gap:7px;align-items:center">'+TV_SECTIONS.map(function(_,i){return '<span style="width:9px;height:9px;border-radius:50%;background:'+(i===tvIdx?'var(--accent,#5b8cff)':'rgba(120,140,180,.3)')+';transition:.3s"></span>';}).join('')+'</span>';
     var net = tv.querySelector('#sp-tv-net'), data = tv.querySelector('#sp-tv-data');
     if (sec.type==='net'){ if(net)net.style.display='block'; if(data)data.style.display='none'; }

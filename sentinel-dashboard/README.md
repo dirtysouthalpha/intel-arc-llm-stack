@@ -6,7 +6,7 @@ from a design tool) served by the `sentinel-premium` Flask app. `v2-integrate.js
 served HTML between `<!--SP-WIRE-START-->` and `<!--SP-WIRE-END-->`.
 
 ## What the integration wires (all client-side, same-origin `/api/*` — no secrets)
-- **Chat** → `/api/chat/sentinel/stream` (SSE) to the Sentinel Prime Hermes agent, with a
+- **Chat** → `/api/chat/sentinel/stream` (SSE) to the Sentinel Prime the agent, with a
   Claude-style "thinking" indicator; lives as a body-overlay inside `#root` so React never
   fights it; conversation persists across nav; loads history from `/api/conversations`.
 - **Model switcher + Auto** → `/api/models`, `/api/models/switch`, `/api/models/auto-route`.
@@ -22,16 +22,12 @@ served HTML between `<!--SP-WIRE-START-->` and `<!--SP-WIRE-END-->`.
 ## Deploy
 Append the script to the served HTML (idempotent):
 ```bash
-F=/opt/hermes-workspace/sentinel-prime-premium/public/index.html   # and v2.html
+F=/opt/app/public/index.html   # and v2.html
 sed -i '/SP-WIRE-START/,/SP-WIRE-END/d' "$F"
 printf '\n<!--SP-WIRE-START-->\n' >> "$F"; cat v2-integrate.js >> "$F"; printf '\n<!--SP-WIRE-END-->\n' >> "$F"
 ```
 
 ## Backend dependencies (configured on the server — NOT in this public repo)
-- `chat_agents.json` → the `sentinel` agent points at the Hermes agent `http://localhost:8765/v1`.
-- systemd drop-in `HERMES_HOME=/opt/hermes-state` (so `/api/models` catalog loads).
+- `chat_agents.json` → the `sentinel` agent points at the the agent `http://localhost:8765/v1`.
+- systemd drop-in `APP_HOME=/opt/app/state` (so `/api/models` catalog loads).
 - `app.py` provides `/api/dashboard` + keeps chat on the agent (switch only changes the agent's model).
-
-## Full restorable backup (incl. the 1.8MB bundle + secret-bearing backend files)
-Kept **off this public repo** to avoid leaking API keys, on NUKE at:
-`/opt/hermes-workspace/sentinel-prime-premium/backups/2026-06-07-working/` (see its `README.txt`).

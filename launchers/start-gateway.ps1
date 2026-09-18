@@ -1,5 +1,5 @@
 # start-gateway.ps1 — LiteLLM unified OpenAI endpoint (local-first cost routing).
-# Reachable over Tailscale at 100.70.240.55:4000.
+# Reachable over Tailscale at SERVER_IP:4000.
 $GW = "V:\AI\gateway"
 if (Test-Path "$GW\.env") {
   Get-Content "$GW\.env" | ForEach-Object {

@@ -13,5 +13,5 @@ gateway/.env
 wsl-gpu-setup.sh
 sentinel_prime_wire.py
 sentinel_prime_verify.py
-wire-nuke-router.py
-wire-nuke-agent.py
+wire-router.py
+wire-agent.py

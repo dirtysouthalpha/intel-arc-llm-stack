@@ -1,6 +1,6 @@
 # Benchmark results — Intel Arc Pro B60 (24GB)
 
-Hardware: HOMESERVER, Arc Pro B60 24GB (Battlemage), driver 32.0.101.8517, oneAPI 2025.1.
+Hardware: the server, Arc Pro B60 24GB (Battlemage), driver 32.0.101.8517, oneAPI 2025.1.
 All numbers in the **interactive session (session 1)**; engine pinned to `level_zero:0`.
 
 ## Engine comparison — Gemma 3 12B (Q4_K_M, ~6.8GB)
