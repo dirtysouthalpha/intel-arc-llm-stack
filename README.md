@@ -1,9 +1,24 @@
-# intel-arc-llm-stack
+<p align="center">
+  <img src="assets/banner.svg" alt="intel-arc-llm-stack — run any LLM locally on Intel Arc">
+</p>
 
-**Run any LLM — Gemma, Qwen3 MoE, gpt-oss, vision *and* audio — locally on an Intel Arc GPU.**
-One OpenAI-compatible endpoint, on-demand model swapping, a cost-routing gateway, and a one-line installer.
+<p align="center">
+  <strong>Run any LLM — Gemma, Qwen3 MoE, gpt-oss, vision <em>and</em> audio — locally on an Intel Arc GPU.</strong><br>
+  One OpenAI-compatible endpoint, on-demand model swapping, a cost-routing gateway, and a one-line installer.
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-22D3EE?style=flat-square&labelColor=0A0A0F" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/GPU-Intel%20Arc-22D3EE?style=flat-square&labelColor=0A0A0F" alt="Intel Arc">
+  <img src="https://img.shields.io/badge/engine-llama.cpp-22D3EE?style=flat-square&labelColor=0A0A0F" alt="llama.cpp">
+  <img src="https://img.shields.io/badge/API-OpenAI--compatible-22D3EE?style=flat-square&labelColor=0A0A0F" alt="OpenAI-compatible">
+  <img src="https://img.shields.io/badge/built%20with-Windows-8B5CF6?style=flat-square&labelColor=0A0A0F" alt="Windows">
+</p>
+
+<p align="center">
+  <img src="assets/demo.svg" alt="one endpoint serving hot-swappable local model aliases">
+</p>
+
 Built and battle-tested on an **Intel Arc Pro B60 (24GB, Battlemage)** on Windows.
 
 ---

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 300" width="1280" height="300" role="img" aria-label="intel-arc-llm-stack — Run any LLM locally on Intel Arc — one command, one endpoint.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#12121A"/>
+      <stop offset="1" stop-color="#0A0A0F"/>
+    </linearGradient>
+    <linearGradient id="sheen" gradientUnits="userSpaceOnUse" x1="-500" y1="0" x2="-140" y2="0">
+      <stop offset="0"   stop-color="#22D3EE"/>
+      <stop offset="0.5" stop-color="#E8E8F0"/>
+      <stop offset="1"   stop-color="#8B5CF6"/>
+      <animate attributeName="x1" values="-500;1280" dur="3.6s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="-140;1640" dur="3.6s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#22D3EE" stop-opacity="0"/>
+      <stop offset="0.15" stop-color="#22D3EE"/>
+      <stop offset="0.85" stop-color="#8B5CF6"/>
+      <stop offset="1"   stop-color="#8B5CF6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="300" fill="url(#bg)"/>
+  <g fill="#22D3EE" opacity="0.06"><circle cx="980" cy="40" r="2"/><circle cx="980" cy="74" r="2"/><circle cx="980" cy="108" r="2"/><circle cx="980" cy="142" r="2"/><circle cx="1014" cy="40" r="2"/><circle cx="1014" cy="74" r="2"/><circle cx="1014" cy="108" r="2"/><circle cx="1014" cy="142" r="2"/><circle cx="1048" cy="40" r="2"/><circle cx="1048" cy="74" r="2"/><circle cx="1048" cy="108" r="2"/><circle cx="1048" cy="142" r="2"/><circle cx="1082" cy="40" r="2"/><circle cx="1082" cy="74" r="2"/><circle cx="1082" cy="108" r="2"/><circle cx="1082" cy="142" r="2"/><circle cx="1116" cy="40" r="2"/><circle cx="1116" cy="74" r="2"/><circle cx="1116" cy="108" r="2"/><circle cx="1116" cy="142" r="2"/><circle cx="1150" cy="40" r="2"/><circle cx="1150" cy="74" r="2"/><circle cx="1150" cy="108" r="2"/><circle cx="1150" cy="142" r="2"/><circle cx="1184" cy="40" r="2"/><circle cx="1184" cy="74" r="2"/><circle cx="1184" cy="108" r="2"/><circle cx="1184" cy="142" r="2"/><circle cx="1218" cy="40" r="2"/><circle cx="1218" cy="74" r="2"/><circle cx="1218" cy="108" r="2"/><circle cx="1218" cy="142" r="2"/><circle cx="1252" cy="40" r="2"/><circle cx="1252" cy="74" r="2"/><circle cx="1252" cy="108" r="2"/><circle cx="1252" cy="142" r="2"/></g>
+
+  <g transform="translate(96,86)">
+    <rect x="0" y="0" width="56" height="56" rx="14" fill="none" stroke="url(#base)" stroke-width="2" opacity="0.9"/>
+    <text x="28" y="38" font-family="ui-monospace,'JetBrains Mono','SFMono-Regular',Menlo,Consolas,monospace" font-size="26" font-weight="700" fill="url(#base)" text-anchor="middle">&gt;_</text>
+  </g>
+
+  <text x="182" y="144" font-family="ui-monospace,'JetBrains Mono','SFMono-Regular',Menlo,Consolas,monospace" font-size="76" font-weight="800" letter-spacing="1" fill="url(#base)" dominant-baseline="middle">intel-arc-llm-stack</text>
+  <text x="182" y="144" font-family="ui-monospace,'JetBrains Mono','SFMono-Regular',Menlo,Consolas,monospace" font-size="76" font-weight="800" letter-spacing="1" fill="url(#sheen)" opacity="0.9" dominant-baseline="middle">intel-arc-llm-stack</text>
+  <text x="184" y="194" font-family="ui-monospace,'JetBrains Mono','SFMono-Regular',Menlo,Consolas,monospace" font-size="23" font-weight="500" letter-spacing="0.5" fill="#6B7280">Run any LLM locally on Intel Arc — one command, one endpoint.</text>
+  <rect x="184" y="254" width="900" height="3" rx="1.5" fill="url(#rule)"/>
+</svg>
