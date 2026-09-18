@@ -48,6 +48,11 @@ your apps ──> LiteLLM gateway (:4000, cost routing) ──> llama-swap (:909
                                                                       └─ Intel Arc GPU
 ```
 
+## Benchmarks
+Real measured throughput, quantization recipes, and MoE-vs-dense data for this exact stack live in the
+companion repo **[intel-arc-llm-benchmarks](https://github.com/dirtysouthalpha/intel-arc-llm-benchmarks)**
+(plus [bench/results.md](bench/results.md) here for the built-in throughput + 128K needle test).
+
 ## The sharp edges (so you skip the pain) — see [docs/](docs) + [bench/results.md](bench/results.md)
 1. **GPU compute only works in an interactive session** (session 1), not a session-0 service —
    otherwise it silently falls back to CPU. The scheduled tasks use `LogonType Interactive`.
