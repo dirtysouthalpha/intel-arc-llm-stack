@@ -1,18 +1,16 @@
+# intel-arc-llm-stack
+
+**Run any LLM — Gemma, Qwen3 MoE, gpt-oss, vision *and* audio — locally on an Intel Arc GPU, behind one OpenAI-compatible endpoint with hot-swapping, cost routing and a one-line installer.**
+
+[![MIT license](https://img.shields.io/badge/license-MIT-22D3EE?style=flat-square&labelColor=0A0A0F)](LICENSE)
+[![CI](https://github.com/dirtysouthalpha/intel-arc-llm-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/dirtysouthalpha/intel-arc-llm-stack/actions/workflows/ci.yml)
+![Intel Arc](https://img.shields.io/badge/GPU-Intel%20Arc-22D3EE?style=flat-square&labelColor=0A0A0F)
+![llama.cpp](https://img.shields.io/badge/engine-llama.cpp-22D3EE?style=flat-square&labelColor=0A0A0F)
+![OpenAI-compatible](https://img.shields.io/badge/API-OpenAI--compatible-22D3EE?style=flat-square&labelColor=0A0A0F)
+![Windows](https://img.shields.io/badge/built%20with-Windows-8B5CF6?style=flat-square&labelColor=0A0A0F)
+
 <p align="center">
   <img src="assets/banner.svg" alt="intel-arc-llm-stack — run any LLM locally on Intel Arc">
-</p>
-
-<p align="center">
-  <strong>Run any LLM — Gemma, Qwen3 MoE, gpt-oss, vision <em>and</em> audio — locally on an Intel Arc GPU.</strong><br>
-  One OpenAI-compatible endpoint, on-demand model swapping, a cost-routing gateway, and a one-line installer.
-</p>
-
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-22D3EE?style=flat-square&labelColor=0A0A0F" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/GPU-Intel%20Arc-22D3EE?style=flat-square&labelColor=0A0A0F" alt="Intel Arc">
-  <img src="https://img.shields.io/badge/engine-llama.cpp-22D3EE?style=flat-square&labelColor=0A0A0F" alt="llama.cpp">
-  <img src="https://img.shields.io/badge/API-OpenAI--compatible-22D3EE?style=flat-square&labelColor=0A0A0F" alt="OpenAI-compatible">
-  <img src="https://img.shields.io/badge/built%20with-Windows-8B5CF6?style=flat-square&labelColor=0A0A0F" alt="Windows">
 </p>
 
 <p align="center">
@@ -20,6 +18,47 @@
 </p>
 
 Built and battle-tested on an **Intel Arc Pro B60 (24GB, Battlemage)** on Windows.
+
+## Quickstart
+
+On a Windows box with an Intel Arc GPU + Python 3.10+, from an **interactive** session (GPU compute
+silently falls back to CPU in session-0 services — see sharp edges below):
+
+```powershell
+# 1. One-line install: IPEX-LLM SYCL + mainline Vulkan llama.cpp + llama-swap engines, a default
+#    Gemma 3 model, the LiteLLM gateway, autostart tasks, firewall rule
+iex "& { $(irm https://raw.githubusercontent.com/dirtysouthalpha/intel-arc-llm-stack/main/install.ps1) } -Root C:\arc-llm"
+
+# ...or from a clone:
+git clone https://github.com/dirtysouthalpha/intel-arc-llm-stack.git
+cd intel-arc-llm-stack
+.\install.ps1 -Root C:\arc-llm
+```
+
+The installer prints your endpoint + API key. Then, from any machine that can reach it:
+
+```bash
+curl http://<host>:4000/v1/chat/completions \
+  -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+  -d '{"model":"local-chat","messages":[{"role":"user","content":"hi"}]}'
+```
+
+Model aliases: `local-chat`, `local-vision`, `gemma-12b-max` (128K), `qwen3-30b` (MoE),
+`gpt-oss-20b`, `qwen3-vl`, `omni` (audio), `local-coding`, and opt-in paid `coding`/`orchestration`.
+Add/edit models in [`llama-swap/models.yaml`](llama-swap/models.yaml) and routing in
+[`gateway/config.yaml`](gateway/config.yaml); `launchers/restart-stack.ps1` restarts the stack.
+
+Size a context window before you pick one: `python vram-budget/vram_budget.py gemma3-12b --weights 6.8 --kv f16`.
+
+## Hardware tested
+
+Facts below come from [bench/results.md](bench/results.md) and [STATUS.md](STATUS.md); add your card via PR.
+
+| GPU | OS / driver | Engine | Model | Result |
+|---|---|---|---|---|
+| Intel Arc Pro B60 24GB (Battlemage) | Windows, driver 32.0.101.8517, oneAPI 2025.1 | IPEX-LLM llama-server (SYCL, b20250729), `-ngl 999` | Gemma 3 12B Q4_K_M | 33.6 tok/s gen, pp512 84 tok/s, 49/49 layers on GPU; 128K ctx runs at ~31 tok/s; needle@16K PASS |
+| Intel Arc Pro B60 24GB | same | IPEX-LLM **ollama** | Gemma 3 12B Q4_K_M | 0.8 tok/s (KV on CPU) — don't use |
+| Intel Arc Pro B60 24GB | same | mainline llama.cpp **Vulkan** | gpt-oss-20b / Qwen3-VL-8B / Qwen2.5-Omni-7B | text MoE, vision, and exact audio transcription verified |
 
 ---
 
@@ -36,24 +75,6 @@ Arc card gets a working multi-model server in one command.
 - 💸 **Local-first cost routing** — everyday + vision stay free on the GPU; paid APIs are opt-in
 - 🔌 **One OpenAI endpoint** — point any app/IDE/agent at it; models hot-swap on demand
 - ♻️ **Autostart** — survives reboot via scheduled tasks
-
-## Install (one command)
-On a Windows box with an Intel Arc GPU + Python 3.10+ (run from an interactive session):
-```powershell
-iex "& { $(irm https://raw.githubusercontent.com/dirtysouthalpha/intel-arc-llm-stack/main/install.ps1) } -Root C:\arc-llm"
-```
-It downloads the engines (IPEX-LLM SYCL + mainline Vulkan llama.cpp + llama-swap), a default Gemma 3
-model, sets up the LiteLLM gateway, registers autostart tasks, opens the firewall, and prints your
-endpoint + API key.
-
-## Use it
-```bash
-curl http://<host>:4000/v1/chat/completions \
-  -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
-  -d '{"model":"local-chat","messages":[{"role":"user","content":"hi"}]}'
-```
-Model aliases: `local-chat`, `local-vision`, `gemma-12b-max` (128K), `qwen3-30b` (MoE),
-`gpt-oss-20b`, `qwen3-vl`, `omni` (audio), `local-coding`, and opt-in paid `coding`/`orchestration`.
 
 ## How it works
 ```
