@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'assets/**', 'LICENSE', 'NOTICE', 'TRADEMARK.md', '.gitignore']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'assets/**', 'LICENSE', 'NOTICE', 'TRADEMARK.md', '.gitignore']
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python tests (vram_budget + YAML configs)
+        run: |
+          pip install pytest pyyaml
+          pytest -q tests
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck wsl-gpu-setup.sh
+      - name: PowerShell parse + PSScriptAnalyzer (Pester)
+        shell: pwsh
+        run: |
+          Install-Module Pester, PSScriptAnalyzer -Force -Scope CurrentUser
+          Import-Module Pester, PSScriptAnalyzer
+          Invoke-Pester -CI -Path tests
