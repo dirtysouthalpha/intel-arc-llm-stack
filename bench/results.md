@@ -42,6 +42,43 @@ Long-context needle-in-haystack @ ~16K: **PASS** (retrieved hidden passcode).
 
 The B60 now covers text, MoE reasoning, vision (5 models), local coding, 128K context, and audio.
 
+## Compatibility matrix — measured vs not yet measured (2026-11-17)
+
+Only the Gemma 3 12B numbers below were measured. Every other row is
+"not measured yet" — do not read a tok/s, TTFT, or load time into them
+from the "accurate gen" notes in the sections above.
+
+| Model | Engine | tok/s | TTFT | Cold load | Notes |
+|---|---|---|---|---|---|
+| Gemma 3 12B (Q4_K_M) | IPEX llama-server | 33.6 tok/s gen; pp512 84 tok/s | not measured yet | not measured yet | needle@16K PASS (17,640 tok) |
+| Gemma 3 27B | IPEX llama-server | not measured yet | not measured yet | not measured yet | accurate gen |
+| Qwen3-30B-A3B | IPEX llama-server | not measured yet | not measured yet | not measured yet | accurate gen |
+| Qwen2.5-Coder-32B | IPEX llama-server | not measured yet | not measured yet | not measured yet | correct code gen |
+| Qwen2.5-VL-7B | IPEX llama-server | not measured yet | not measured yet | not measured yet | accurate image description (32s load) |
+| gpt-oss-20b | Vulkan | not measured yet | not measured yet | 15s warm | accurate gen |
+| Qwen3-VL-8B | Vulkan | not measured yet | not measured yet | not measured yet | "Red circle." (needs `-fit off`) |
+| Qwen2.5-Omni-7B | Vulkan | not measured yet | not measured yet | not measured yet | vision OK; audio transcription exact |
+| Qwen3.8-27B | Vulkan | not measured yet | not measured yet | not measured yet | added 2026-11-17 (PR #6); text-only, no verified mmproj yet |
+
+How to measure a row (gateway default — the live path):
+
+```
+powershell -File bench.ps1 -Model local-chat
+powershell -File bench.ps1 -Model gemma3-12b-max -Ctx 16384
+powershell -File bench.ps1 -Model qwen3.8-27b
+```
+
+Ollama path only, for comparison (disabled on the live stack):
+
+```
+powershell -File bench.ps1 -Ollama -Model gemma3-12b-max -Port 11500
+```
+
+Record the date, driver, engine build, model, context, tok/s, TTFT
+(gateway reports ttft_s as 0 — the chat API does not report prompt-eval
+time; use the Ollama path for a TTFT number), and cold-load time when
+you fill in a row.
+
 ## Decisions
 - **Heavy models → `llama-server`** (IPEX-LLM llama.cpp portable), one model per process,
   orchestrated by **llama-swap** for multi-model behind one OpenAI port.
