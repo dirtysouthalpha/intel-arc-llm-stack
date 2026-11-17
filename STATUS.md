@@ -1,5 +1,7 @@
 # Live system status
 
+*Updated 2026-11-17. Live status is as recorded in this file and in bench/results.md; verify on the live host before changing it.*
+
 The Arc B60 local-LLM stack is **operational on the server** and reboot-persistent.
 
 ## Endpoints
@@ -53,6 +55,8 @@ curl http://SERVER_IP:4000/v1/chat/completions \
 ```
 
 ## Next steps
-- Pull more models (27B, gpt-oss-20b, Qwen3-VL, Qwen2.5-Omni) — see MODELS.md; add to `llama-swap/models.yaml`.
-- Wire Sentinel's LiteLLM at the same models (secondary).
-- xpu-smi monitoring + needle-in-haystack long-context verification.
+- Wire Sentinel's LiteLLM at the same models (secondary, needs sign-off — see docs/sentinel-integration.md).
+- xpu-smi monitoring for the live stack.
+- Verify on the live host whether `V:\AI\llama-cpp\` exists separately from the installer's `llama-cpp-ipex` directory (engine-path drift, documented in docs/troubleshooting.md).
+- Needle-in-haystack long-context verification at 16K is already recorded as PASS in bench/results.md.
+- The models listed above as "next" in earlier versions (27B, gpt-oss-20b, Qwen3-VL, Qwen2.5-Omni) are already in `llama-swap/models.yaml`.
