@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Installer: `-Full` mode writes the full 11-model roster and 12 local gateway aliases, registers `B60-Swap` / `B60-Gateway`; Gemma-only remains the default `-Minimal` path. Driver preflight (minimum 31.0.101.5522) and download retries added.
+- Installer (pending in PR #4, not in this PR): `-Full` mode will write the full 12-model roster and 14 local gateway aliases, including Qwen3.8-27B / `sentinel-local`, registers `B60-Swap` / `B60-Gateway`; Gemma-only remains the default `-Minimal` path. Driver preflight (minimum 31.0.101.5522) and download retries added.
+- Live roster in main is now 12 models / 14 local aliases (Qwen3.8-27B added by PR #6, merged 2026-11-17); the MODELS.md Live now table in this PR is updated to match.
 - Docs refresh (2026-11-17): STATUS.md dated and corrected, PLAN.md Phases 1 and 3 marked superseded/blocked, MODELS.md reconciled with a Live now table, `docs/troubleshooting.md` added, README Requirements / Upgrade / Uninstall sections added.
 
 ## 2026-11-01 — Polish
