@@ -55,7 +55,7 @@ from the "accurate gen" notes in the sections above.
 | Qwen3-30B-A3B | IPEX llama-server | not measured yet | not measured yet | not measured yet | accurate gen |
 | Qwen2.5-Coder-32B | IPEX llama-server | not measured yet | not measured yet | not measured yet | correct code gen |
 | Qwen2.5-VL-7B | IPEX llama-server | not measured yet | not measured yet | not measured yet | accurate image description (32s load) |
-| gpt-oss-20b | Vulkan | not measured yet | not measured yet | 15s warm | accurate gen |
+| gpt-oss-20b | Vulkan | not measured yet | not measured yet | not measured yet (prior note: 15s warm) | accurate gen |
 | Qwen3-VL-8B | Vulkan | not measured yet | not measured yet | not measured yet | "Red circle." (needs `-fit off`) |
 | Qwen2.5-Omni-7B | Vulkan | not measured yet | not measured yet | not measured yet | vision OK; audio transcription exact |
 | Qwen3.8-27B | Vulkan | not measured yet | not measured yet | not measured yet | added 2026-11-17 (PR #6); text-only, no verified mmproj yet |
