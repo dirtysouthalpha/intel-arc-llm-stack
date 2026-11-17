@@ -24,6 +24,7 @@ VRAM math assumes 24GB total, ~1–2GB reserved, rest split between weights + KV
 | gpt-oss-20b | gpt-oss-20b | Vulkan |
 | Qwen3-VL-8B | qwen3-vl | Vulkan |
 | Qwen2.5-Omni-7B | omni | Vulkan |
+| Qwen3.8-27B (16K) | qwen3.8-27b, sentinel-local | Vulkan |
 
 ## Future / untested
 
