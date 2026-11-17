@@ -66,6 +66,19 @@ model_list:
       model: openai/qwen2.5-omni
       api_base: http://127.0.0.1:9090/v1
       api_key: "swap"
+  # Sentinel lane: Qwen3.8-27B on the B60 (llama-swap model "qwen3.8-27b").
+  # "sentinel-local" is the stable alias agents should call; "qwen3.8-27b"
+  # is the raw model id for A/B comparisons against the stock model.
+  - model_name: qwen3.8-27b
+    litellm_params:
+      model: openai/qwen3.8-27b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
+  - model_name: sentinel-local
+    litellm_params:
+      model: openai/qwen3.8-27b
+      api_base: http://127.0.0.1:9090/v1
+      api_key: "swap"
 
   # ---- Paid, opt-in: used only when the caller explicitly asks for these aliases ----
   - model_name: coding
@@ -78,7 +91,7 @@ model_list:
       api_key: os.environ/ANTHROPIC_API_KEY
 
 litellm_settings:
-  default_fallbacks: ["local-chat"]
+  default_fallbacks: ["local-chat", "qwen3.8-27b"]
   drop_params: true
 
 general_settings:
