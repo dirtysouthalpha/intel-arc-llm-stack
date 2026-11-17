@@ -15,8 +15,8 @@
   Modes:
    - Default / -Minimal: Gemma 3 12B only, 2 llama-swap entries, 2 gateway aliases
      (local-chat, local-vision), tasks ArcLLM-Swap / ArcLLM-Gateway.
-   - -Full: writes the full live roster — all 11 models from llama-swap/models.yaml
-     and all 12 local gateway aliases from gateway/config.yaml — and registers
+   - -Full: writes the full live roster — all 12 models from llama-swap/models.yaml
+     and all 14 local gateway aliases from gateway/config.yaml — and registers
      the B60-Swap / B60-Gateway task names used in STATUS.md. Only the default
      model is downloaded; other models are configured and must be downloaded
      separately into $Root\models (see the model file names in the generated
@@ -44,7 +44,7 @@ param(
   [int]$SwapPort = 9090,
   [switch]$NoModel,                          # skip the (large) model download
   [switch]$SkipFirewall,
-  [switch]$Full,                             # write the full 11-model roster + 12 local aliases
+  [switch]$Full,                             # write the full 12-model roster + 14 local aliases
   [switch]$Minimal                           # explicit Gemma-only fast path (the default)
 )
 $ErrorActionPreference = "Stop"
@@ -70,7 +70,7 @@ foreach($d in "downloads","models","logs","llama-cpp-ipex","llama-cpp-vulkan","l
   New-Item -ItemType Directory -Force -Path (Join-Path $Root $d) | Out-Null
 }
 Say "Root: $Root"
-if ($Full) { Say "Mode: Full — writing all 11 models and 12 local gateway aliases" } else { Say "Mode: Minimal — Gemma 3 12B only (use -Full for the full roster)" }
+if ($Full) { Say "Mode: Full — writing all 12 models and 14 local gateway aliases" } else { Say "Mode: Minimal — Gemma 3 12B only (use -Full for the full roster)" }
 
 # --- 2. Engines (pinned, validated versions) ---
 $ENGINES = @{
@@ -183,6 +183,14 @@ models:
       --mmproj $Root\models\Qwen2.5-Omni-7B-mmproj-f16.gguf
       -ngl 999 --host 127.0.0.1 --port `${PORT} -c 32768 -np 1 --no-mmap
     ttl: 1800
+  # Qwen3.8-27B - latest open Qwen (Apache-2.0), Sentinel lane. Q4 ~17-18GB, fits the B60.
+  # Mainline Vulkan binary, with --jinja like gpt-oss-20b. Text-only: no --mmproj line,
+  # the mmproj filename for this model is NOT verified yet.
+  "qwen3.8-27b":
+    cmd: >
+      $Root\llama-cpp-vulkan\llama-server.exe -m $Root\models\Qwen3.8-27B-Instruct-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port `${PORT} -c 16384 --jinja -np 1 --no-mmap
+    ttl: 1800
 "@
 $gwYaml = @"
 model_list:
@@ -210,11 +218,15 @@ model_list:
     litellm_params: { model: openai/qwen3-vl-8b, api_base: http://127.0.0.1:$SwapPort/v1, api_key: "swap" }
   - model_name: omni
     litellm_params: { model: openai/qwen2.5-omni, api_base: http://127.0.0.1:$SwapPort/v1, api_key: "swap" }
+  - model_name: qwen3.8-27b
+    litellm_params: { model: openai/qwen3.8-27b, api_base: http://127.0.0.1:$SwapPort/v1, api_key: "swap" }
+  - model_name: sentinel-local
+    litellm_params: { model: openai/qwen3.8-27b, api_base: http://127.0.0.1:$SwapPort/v1, api_key: "swap" }
   - model_name: coding
     litellm_params: { model: anthropic/claude-sonnet-4-6, api_key: os.environ/ANTHROPIC_API_KEY }
   - model_name: orchestration
     litellm_params: { model: anthropic/claude-opus-4-8, api_key: os.environ/ANTHROPIC_API_KEY }
-litellm_settings: { default_fallbacks: ["local-chat"], drop_params: true }
+litellm_settings: { default_fallbacks: ["local-chat", "qwen3.8-27b"], drop_params: true }
 general_settings: { master_key: os.environ/LITELLM_MASTER_KEY }
 "@
 } else {
@@ -306,7 +318,7 @@ if(-not $SkipFirewall -and -not (Get-NetFirewallRule -DisplayName "Arc LLM Gatew
 
 Say "DONE."
 if ($Full) {
-  Say "Full roster installed: 11 models configured, 12 local gateway aliases. Only the default Gemma model was downloaded — download other model GGUFs into $Root\models before calling those aliases."
+  Say "Full roster installed: 12 models configured, 14 local gateway aliases. Only the default Gemma model was downloaded — download other model GGUFs into $Root\models before calling those aliases."
 }
 Say "Endpoint: http://<this-host>:$GatewayPort/v1   (model: local-chat / local-vision)"
 Say "API key : $key"
