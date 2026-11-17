@@ -111,3 +111,15 @@ models:
       -ngl 999 --host 127.0.0.1 --port ${PORT}
       -c 32768 -np 1 --no-mmap
     ttl: 1800
+
+  # Qwen3.8-27B - latest open Qwen (Apache-2.0), Sentinel lane. Q4 ~17-18GB, fits the B60.
+  # Newer Qwen arch -> MAINLINE VULKAN binary (like qwen3-vl-8b), with --jinja like gpt-oss-20b.
+  # NOTE: no --mmproj line here -- the mmproj filename for this model is NOT verified yet.
+  # Text-only until the vision projector file on disk is confirmed; add --mmproj then.
+  "qwen3.8-27b":
+    cmd: >
+      V:\AI\llama-cpp-vulkan\llama-server.exe
+      -m V:\AI\models\Qwen3.8-27B-Instruct-Q4_K_M.gguf
+      -ngl 999 --host 127.0.0.1 --port ${PORT}
+      -c 16384 --jinja -np 1 --no-mmap
+    ttl: 1800
