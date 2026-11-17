@@ -50,6 +50,26 @@ Add/edit models in [`llama-swap/models.yaml`](llama-swap/models.yaml) and routin
 
 Size a context window before you pick one: `python vram-budget/vram_budget.py gemma3-12b --weights 6.8 --kv f16`.
 
+## Requirements
+
+- Windows with an Intel Arc GPU — built and tested on an Intel Arc Pro B60 24GB (Battlemage).
+- Intel Arc driver >= 31.0.101.5522 (tested with 32.0.101.8517), Intel oneAPI Base Toolkit 2025.1.
+- Python 3.10+ on PATH.
+- Disk space for models: Gemma 3 12B Q4_K_M is about 6.8GB; allow several GB per additional model (see `llama-swap/models.yaml` for file names).
+- An interactive Windows session for GPU compute — GPU work silently falls back to CPU in session-0 services.
+
+## Upgrade
+
+- To update an engine, change its pin in `install.ps1` (`$ENGINES`: IPEX b20250729, llama.cpp b9544, llama-swap v223), re-run the installer, then restart the stack with `launchers/restart-stack.ps1`.
+- To add a model, add its entry to `llama-swap/models.yaml` and its alias to `gateway/config.yaml`, download its GGUF into the models directory, then restart the stack. Test with the gateway smoke test in the Quickstart.
+- Do not change the LiteLLM version or engine pins without testing on the live B60 first — no verified newer known-good set is recorded in the repo.
+
+## Uninstall
+
+- Remove the scheduled tasks `ArcLLM-Swap` / `ArcLLM-Gateway` (Minimal install) or `B60-Swap` / `B60-Gateway` (Full install).
+- Remove the firewall rule "Arc LLM Gateway".
+- Delete the install root (default `C:\arc-llm`), which removes the engines, models, gateway venv, and logs under that root.
+
 ## Hardware tested
 
 Facts below come from [bench/results.md](bench/results.md) and [STATUS.md](STATUS.md); add your card via PR.
@@ -101,12 +121,19 @@ companion repo **[intel-arc-llm-benchmarks](https://github.com/dirtysouthalpha/i
 6. **Deploy configs with SCP**, not inline base64-over-SSH (truncates >~2KB). LiteLLM YAML must be ASCII.
 
 ## Layout
-- `install.ps1` — the one-line installer.
+- `install.ps1` — the one-line installer (`-Minimal` Gemma-only, `-Full` full roster).
 - `vram-budget/` — max-`num_ctx` calculator (KV-cache + sliding-window aware).
 - `launchers/` — start scripts (device-pinned to the Arc) + `restart-stack.ps1`.
 - `llama-swap/models.yaml` — model definitions. `gateway/config.yaml` — LiteLLM cost routing.
 - `bench/` — throughput + long-context needle test + results.
-- `docs/` — vLLM/Vulkan notes, Sentinel-style router integration.
+- `docs/` — vLLM/Vulkan notes, Sentinel-style router integration, troubleshooting.
+- `MODELS.md` — model strategy, live roster, and future tiers.
+- `PLAN.md` — the build plan, with superseded phases marked.
+- `STATUS.md` — live system status.
+- `recipes/` — per-model Modelfiles.
+- `sentinel-dashboard/` — Sentinel dashboard files.
+- `setup-services.ps1` — service setup. `wsl-gpu-setup.sh` — WSL GPU setup.
+- `gateway/.env.example` — example gateway environment file (copy to `gateway/.env` and fill in).
 
 ## License
 MIT — built to help everyone with these cards. PRs welcome (more models, more Arc SKUs, perf tuning).

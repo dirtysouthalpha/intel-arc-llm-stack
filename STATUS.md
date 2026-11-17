@@ -1,5 +1,7 @@
 # Live system status
 
+*Updated 2026-11-17. Live status is as recorded in this file and in bench/results.md; verify on the live host before changing it.*
+
 The Arc B60 local-LLM stack is **operational on the server** and reboot-persistent.
 
 ## Endpoints
@@ -21,10 +23,11 @@ The Arc B60 local-LLM stack is **operational on the server** and reboot-persiste
 | `gpt-oss-20b` | gpt-oss-20b **MoE** | OpenAI open model (Vulkan engine) |
 | `qwen3-vl` | Qwen3-VL-8B | newer vision (Vulkan engine) |
 | `omni` | Qwen2.5-Omni-7B | text+image+**audio**+video (Vulkan engine) |
+| `qwen3.8-27b` / `sentinel-local` | Qwen3.8-27B | latest open Qwen (Vulkan engine, 16K, text-only) |
 | `coding` | claude-sonnet-4-6 | **paid**, needs ANTHROPIC_API_KEY |
 | `orchestration` | claude-opus-4-8 | **paid**, needs ANTHROPIC_API_KEY |
 
-Default fallback is `local-chat`, so unspecified traffic stays local + free.
+Default fallback is `local-chat` then `qwen3.8-27b`, so unspecified traffic stays local + free.
 Only one big model is resident at a time; llama-swap loads/unloads on demand (~30-260s cold load).
 
 ## Throughput (Gemma 3 12B Q4 on the B60)
@@ -53,6 +56,8 @@ curl http://SERVER_IP:4000/v1/chat/completions \
 ```
 
 ## Next steps
-- Pull more models (27B, gpt-oss-20b, Qwen3-VL, Qwen2.5-Omni) — see MODELS.md; add to `llama-swap/models.yaml`.
-- Wire Sentinel's LiteLLM at the same models (secondary).
-- xpu-smi monitoring + needle-in-haystack long-context verification.
+- Wire Sentinel's LiteLLM at the same models (secondary, needs sign-off — see docs/sentinel-integration.md).
+- xpu-smi monitoring for the live stack.
+- Verify on the live host whether `V:\AI\llama-cpp\` exists separately from the installer's `llama-cpp-ipex` directory (engine-path drift, documented in docs/troubleshooting.md).
+- Needle-in-haystack long-context verification at 16K is already recorded as PASS in bench/results.md.
+- The models listed above as "next" in earlier versions (27B, gpt-oss-20b, Qwen3-VL, Qwen2.5-Omni) are already in `llama-swap/models.yaml`.

@@ -44,6 +44,8 @@ All under a new repo **`V:\AI`** (git-init'd, with README):
 
 ## Phase 1 — Get the B60 serving (IPEX-LLM Ollama, Windows native)
 
+> **Status 2026-11-17: SUPERSEDED.** IPEX-Ollama is disabled on the live stack (STATUS.md: `B60-IPEX-Ollama` disabled, superseded by llama-swap / llama-server). Keep this phase for history; do not follow it for a new install — use `install.ps1` / llama-swap instead.
+
 Fastest path; keeps the existing Ollama UX and your model library, GPU-accelerated on the B60.
 
 - Download **IPEX-LLM Ollama Portable Zip** (≥ 2.2.0b, includes Battlemage attention kernels; no conda/oneAPI install needed) → extract to `V:\AI\ipex-ollama\`.
@@ -61,6 +63,8 @@ For each target, compute the weight-quant + KV-cache-dtype + context that maximi
 - The `vram-budget` tool prints the realistic ceiling so we never silently overflow to shared memory (which kills throughput).
 
 ## Phase 3 — vLLM power tier (max throughput + context, Docker/WSL XPU)
+
+> **Status 2026-11-17: BLOCKED.** Per docs/vllm-and-newer-models.md, compute-runtime 24.39 does not recognise the B60 and vLLM needs 25.x. Newer models are currently covered by the mainline Vulkan engine instead. Keep this phase as a future option, not the current path.
 
 vLLM gives paged KV cache + FP8 KV-cache quant = the best context-saturation engine; Intel + vLLM officially support the Arc Pro B-series (`intel/vllm` Docker image).
 

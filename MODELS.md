@@ -8,6 +8,33 @@ VRAM math assumes 24GB total, ~1–2GB reserved, rest split between weights + KV
 
 ---
 
+
+## Live now — matches llama-swap/models.yaml (2026-11-17)
+
+| Model | Alias in gateway/config.yaml | Engine |
+|---|---|---|
+| Gemma 3 12B (64K) | gemma-12b, local-chat | IPEX SYCL |
+| Gemma 3 12B max (128K) | gemma-12b-max | IPEX SYCL |
+| Gemma 3 12B vision | local-vision, gemma-12b-vision via gemma3-12b-vision | IPEX SYCL |
+| Gemma 3 27B (32K) | gemma-27b | IPEX SYCL |
+| Gemma 3 27B vision (16K) | gemma-27b-vision | IPEX SYCL |
+| Qwen3-30B-A3B MoE | qwen3-30b | IPEX SYCL |
+| Qwen2.5-Coder-32B (16K) | local-coding | IPEX SYCL |
+| Qwen2.5-VL-7B | qwen2.5-vl | IPEX SYCL |
+| gpt-oss-20b | gpt-oss-20b | Vulkan |
+| Qwen3-VL-8B | qwen3-vl | Vulkan |
+| Qwen2.5-Omni-7B | omni | Vulkan |
+| Qwen3.8-27B (16K) | qwen3.8-27b, sentinel-local | Vulkan |
+
+## Future / untested
+
+Not in `llama-swap/models.yaml` or `gateway/config.yaml` yet — do not assume they work:
+
+- Qwen2.5-VL-32B-Instruct — Tier 2 vision, Q4 ~18GB, untested on this stack.
+- Mistral-Small-3.2-24B — Tier 2 vision + tools, Q4 ~14GB, untested on this stack.
+- MiniCPM-o 2.6 — Tier 3 omni, streaming video+audio, untested on this stack.
+- bge-m3 (+ bge-reranker-v2-m3) — Tier 5 RAG / embeddings, no implementation yet.
+
 ## Tier 1 — Flagship reasoning + tool use (MoE, daily driver)
 
 | Model | Type | Active/Total | Modality | Tools | Arc status | Fit @ 24GB |
