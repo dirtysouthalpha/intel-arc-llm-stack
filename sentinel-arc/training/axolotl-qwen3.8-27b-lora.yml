@@ -1,0 +1,64 @@
+# Axolotl config for sentinel-arc-27b-v1 - LoRA on Qwen3.8-27B.
+# Companion to train-qwen3.8-27b-lora.md. READ THAT FILE FIRST.
+# BEFORE LAUNCH: fill in base_model with the verified Hugging Face repo
+# id for the open Qwen3.8-27B weights (Apache-2.0). Do not guess the id.
+base_model: <HF repo id for Qwen3.8-27B - VERIFY on huggingface.co before launch>
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+
+load_in_8bit: false
+load_in_4bit: false
+strict: false
+
+datasets:
+  - path: sentinel-arc/data/train.jsonl
+    type: completion
+    # JSONL rows: instruction / input / output. Axolotl `completion`
+    # format is used as supplied; if the installed Axolotl version
+    # needs a different dataset type for this shape, adjust it here
+    # at launch and record the change in the run log.
+
+dataset_prepared_path: null
+val_set_size: 0.0
+output_dir: ./outputs/sentinel-arc-27b-v1
+
+sequence_len: 4096
+max_seq_len: 4096
+sample_packing: true
+eval_sample_packing: false
+pad_to_sequence_len: true
+
+adapter: lora
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+num_epochs: 3
+micro_batch_size: 1
+gradient_accumulation_steps: 8
+learning_rate: 0.0001
+lr_scheduler: cosine
+warmup_ratio: 0.03
+optimizer: adamw_torch_fused
+bf16: true
+tf32: true
+gradient_checkpointing: true
+
+# Checkpoint at the end of every epoch. steps-per-epoch =
+# ceil(1000 examples / effective batch 8) = 125 steps, so save every
+# 125 steps. If packing changes the step count, set save_steps to the
+# actual steps-per-epoch printed at launch and record it.
+save_steps: 125
+save_total_limit: 3
+logging_steps: 10
+
+special_tokens:
+  pad_token: <|endoftext|>
