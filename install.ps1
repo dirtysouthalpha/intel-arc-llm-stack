@@ -283,16 +283,17 @@ Say "creating gateway venv + installing litellm (this takes a few minutes)"
 $pipAttempt = 0
 while ($true) {
   $pipAttempt++
-  & "$Root\gateway\venv\Scripts\python.exe" -m pip install --quiet "litellm[proxy]"
+  & "$Root\gateway\venv\Scripts\python.exe" -m pip install --quiet "litellm[proxy]==1.108.11"
   if ($LASTEXITCODE -eq 0) { break }
-  if ($pipAttempt -ge 3) { throw "pip install litellm[proxy] failed after 3 attempts." }
+  if ($pipAttempt -ge 3) { throw "pip install litellm[proxy]==1.108.11 failed after 3 attempts." }
   Say "pip install attempt $pipAttempt failed, retrying in 5s..."
   Start-Sleep -Seconds 5
 }
-# NOTE: LiteLLM is intentionally not pinned to a specific version here — no
-# verified known-good version is recorded in the repo. Pin it once a version
-# has been validated on the live B60. Engine zip SHA256 checks are likewise
-# not added here — no verified checksums are recorded in the repo.
+# NOTE: LiteLLM is pinned to the 1.108.11 LTS release (Nov 17, 2026, per the
+# official LiteLLM release notes). Not yet validated on the live B60 — bump
+# the pin only after a version is confirmed working there. Engine zip SHA256
+# checks are likewise not added here — no verified checksums are recorded
+# in the repo.
 
 # --- 7. Scheduled tasks (INTERACTIVE session = GPU works) ---
 function Register-Svc($name,$file,[switch]$Startup){
