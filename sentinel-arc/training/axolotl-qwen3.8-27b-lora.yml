@@ -1,8 +1,9 @@
 # Axolotl config for sentinel-arc-27b-v1 - LoRA on Qwen3.8-27B.
 # Companion to train-qwen3.8-27b-lora.md. READ THAT FILE FIRST.
-# BEFORE LAUNCH: fill in base_model with the verified Hugging Face repo
-# id for the open Qwen3.8-27B weights (Apache-2.0). Do not guess the id.
-base_model: <HF repo id for Qwen3.8-27B - VERIFY on huggingface.co before launch>
+# base_model verified 2026-11-17: Qwen/Qwen3.8-27B on huggingface.co
+# (official Qwen base, Apache-2.0; cited as the base repo by multiple
+# derivative repos, e.g. hf download Qwen/Qwen3.8-27B).
+base_model: Qwen/Qwen3.8-27B
 model_type: AutoModelForCausalLM
 tokenizer_type: AutoTokenizer
 
