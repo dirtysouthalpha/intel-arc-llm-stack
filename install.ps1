@@ -188,7 +188,7 @@ models:
   # the mmproj filename for this model is NOT verified yet.
   "qwen3.8-27b":
     cmd: >
-      $Root\llama-cpp-vulkan\llama-server.exe -m $Root\models\Qwen3.8-27B-Instruct-Q4_K_M.gguf
+      $Root\llama-cpp-vulkan\llama-server.exe -m $Root\models\Qwen3.8-27B-Q4_K_M.gguf
       -ngl 999 --host 127.0.0.1 --port `${PORT} -c 16384 --jinja -np 1 --no-mmap
     ttl: 1800
 "@
